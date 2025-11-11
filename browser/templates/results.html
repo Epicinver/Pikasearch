@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pikasearch Results - {{ correct.name }}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body class="dark">
+    <div class="container">
+      <!-- Header -->
+      <h1 class="title" onclick="window.location='/'">Pikasearch</h1>
+
+      <!-- Search Form -->
+      <form action="/search" method="get">
+        <input
+          type="text"
+          id="query"
+          placeholder="Search Pokémon..."
+          required
+        />
+        <input type="hidden" name="q" id="encoded" />
+        <button type="submit">Search</button>
+        <button
+          type="button"
+          onclick="window.location.href='/random'"
+          class="random-btn"
+        >
+          🎲 Random
+        </button>
+      </form>
+
+      <!-- Search Metadata -->
+      <p class="meta">
+        {{ count }} results found | Searching took {{ elapsed }}ms
+      </p>
+
+      <!-- Main Pokémon -->
+      <div class="found-match">
+        <h2>Found a Match</h2>
+        <img src="{{ correct.icon }}" alt="{{ correct.name }}" />
+        <h3>{{ correct.name }} (#{{ correct.id }})</h3>
+        <p><b>Type:</b> {{ ', '.join(correct.types) }}</p>
+        <p><b>Abilities:</b> {{ ', '.join(correct.abilities) }}</p>
+        <p>
+          <b>Height:</b> {{ correct.height }} | <b>Weight:</b> {{ correct.weight
+          }}
+        </p>
+        <h4>Stats:</h4>
+        <ul>
+          {% for stat, value in correct.stats.items() %}
+          <li><b>{{ stat }}:</b> {{ value }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <hr />
+
+      <!-- Related Pokémon -->
+      <h2>Other Related Results</h2>
+      <div class="related-results">
+        {% for poke in related %}
+        <form
+          action="{{ url_for('search') }}"
+          method="get"
+          style="display: inline"
+        >
+          <input type="hidden" name="q" value="{{ poke.id | b64encode }}" />
+          <button type="submit" class="related-btn">
+            <img
+              src="{{ poke.icon }}"
+              alt="{{ poke.name }}"
+              class="related-icon"
+            />
+            <span>{{ poke.name }} (#{{ poke.id }})</span>
+          </button>
+        </form>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Encode search input -->
+    <script>
+      console.log("Hey get out of here!");
+
+      console.log("Your gonna break the site!");
+
+      console.log("...or maybe not.");
+
+      console.log("What am I even talking about?");
+
+      console.log("Everything is in the backend, silly!");
+
+      console.log("Have a nice day!");
+
+      console.log(
+        "\n\n\n\n\n\n(Seriously, stop looking at this. If you wanna sneak around, go to https://github.com/Epicinver/Pikasearch)"
+      );
+      document.querySelector("form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const text = document.getElementById("query").value;
+        const encoded = btoa(text);
+        document.getElementById("encoded").value = encoded;
+        e.target.submit();
+      });
+    </script>
+  </body>
+</html>
